@@ -19,9 +19,26 @@ BIG_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 90)
 
 # Game Colours:
 RED = (168, 0, 0)
-GOLD = (218,165,32)
-GREEN = (0,100,0)
+GOLD = (218, 165, 32)
+GREEN = (0, 100, 0)
 
+# Game Images:
+D6_ONE = (pygame.image.load(os.path.join("Assets", "Dice", "d6_one.png")), (42, 42))
+D6_TWO = (pygame.image.load(os.path.join("Assets", "Dice", "d6_two.png")), (42, 42))
+D6_THREE = (pygame.image.load(os.path.join("Assets", "Dice", "d6_three.png")), (42, 42))
+D6_FOUR = (pygame.image.load(os.path.join("Assets", "Dice", "d6_four.png")), (42, 42))
+D6_FIVE = (pygame.image.load(os.path.join("Assets", "Dice", "d6_five.png")), (42, 42))
+D6_SIX = (pygame.image.load(os.path.join("Assets", "Dice", "d6_six.png")), (42, 42))
+
+# Dice Sets:
+D6_IMAGES = {
+    1: D6_ONE,
+    2: D6_TWO,
+    3: D6_THREE,
+    4: D6_FOUR,
+    5: D6_FIVE,
+    6: D6_SIX
+}
 # ScreenStates:
 class ScreenState(Enum):
     START = 1
@@ -69,7 +86,7 @@ class Game:
     POINTS_LEFT = 27
     ROLL_GROUPS = []
     CURRENT_DICE = None
-    DICE_RESULTS = None
+    DICE_RESULTS = []
     # Events:
     BUTTONS_ENABLED = True
     ENTER_PRESSED = False

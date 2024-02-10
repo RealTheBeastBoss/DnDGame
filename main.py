@@ -2,6 +2,8 @@ from button import Button
 from weapon import *
 from spell import *
 from character import *
+from dice import Dice
+import random
 import sys
 
 PLAYER = Character(None, None, None, None, None, None, [], None, None, None, 1)
@@ -854,6 +856,7 @@ def player_scores():
         roll_button = Button("Dice Roll", 960, 370)
         if roll_button.check_click():
             Game.CURRENT_STATE = ScreenState.POINT_ROLL
+            Game.CURRENT_DICE = [Dice(6), Dice(6), Dice(6), Dice(6)]
         return True
     elif Game.CURRENT_STATE == ScreenState.POINT_BUY:
         WINDOW.fill(GREEN)
@@ -1110,11 +1113,56 @@ def player_scores():
                 Game.SELECTED_INDEX += 1
         return True
     elif Game.CURRENT_STATE == ScreenState.POINT_ROLL:
+        WINDOW.fill(GREEN)
+        draw_text("Point Rolling", MEDIUM_FONT, RED, (960, 100))
+        if len(Game.ROLL_GROUPS) == 6:
+            pass
+        else:
+            if len(Game.ROLL_GROUPS) > 0:
+                draw_text("Scores:", SMALL_FONT, RED, (1800, 360))
+                for x in range(len(Game.ROLL_GROUPS)):
+                    draw_text(str(Game.ROLL_GROUPS[x]), BUTTON_FONT, RED, (1800, 400 + (x * 30)))
+            draw_text("This Roll", SMALL_FONT, RED, (960, 300))
+            for x in range(len(Game.DICE_RESULTS)):
+                colour = GOLD
+                if x == 3:
+                    colour = RED
+                draw_text(str(Game.DICE_RESULTS[x]), BUTTON_FONT, colour, (930 + (x * 20), 360))
+            num = Game.DICE_RESULTS[0] + Game.DICE_RESULTS[1] + Game.DICE_RESULTS[2]
+            draw_text(str(num), SMALL_FONT, RED, (960, 420))
+            if len(Game.ROLL_GROUPS) == 5:
+                next_button = Button("Assign the Scores", 960, 480)
+                if next_button.check_click():
+                    Game.ROLL_GROUPS.append(num)
+                    Game.DICE_RESULTS = []
+            else:
+                next_button = Button("Next Roll", 960, 480)
+                if next_button.check_click():
+                    Game.ROLL_GROUPS.append(num)
+                    Game.DICE_RESULTS = []
+                    Game.CURRENT_DICE = [Dice(6), Dice(6), Dice(6), Dice(6)]
         return True
 
 def rolling_dice():
     WINDOW.fill(GREEN)
     draw_text("Rolling Dice", MEDIUM_FONT, RED, (960, 100))
+    start_pos = 0
+    match len(Game.CURRENT_DICE):
+        case 4:
+            start_pos = 762
+    for x in range(len(Game.CURRENT_DICE)):
+        Game.CURRENT_DICE[x].draw(start_pos + (x * 104), 360)
+    if len(Game.DICE_RESULTS) == 0:
+        roll_button = Button("Roll the Dice", 960, 500)
+        if roll_button.check_click():
+            for dice in Game.CURRENT_DICE:
+                dice.sideFacing = random.randint(1, dice.sides)
+                Game.DICE_RESULTS.append(dice.sideFacing)
+    else:
+        next_button = Button("Continue", 960, 500)
+        if next_button.check_click():
+            Game.CURRENT_DICE = None
+            Game.DICE_RESULTS.sort(reverse = True)
 
 if __name__ == '__main__':
     clock = pygame.time.Clock()
