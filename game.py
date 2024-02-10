@@ -13,11 +13,12 @@ pygame.font.init()
 # Game Fonts:
 TINY_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 20)
 BUTTON_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 30)
+SMALL_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 45)
 MEDIUM_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 60)
 BIG_FONT = pygame.font.Font(os.path.join("Fonts", "beastboss_font.ttf"), 90)
 
 # Game Colours:
-RED = (168, 15, 15)
+RED = (168, 0, 0)
 GOLD = (218,165,32)
 GREEN = (0,100,0)
 
@@ -41,16 +42,40 @@ class ScreenState(Enum):
     CREATE_ROCK_GNOME = 16
     CREATE_TIEFLING = 17
     SELECT_CLASS = 18
+    CREATE_BARBARIAN = 19
+    CREATE_BARD = 20
+    CREATE_CLERIC = 21
+    CREATE_DRUID = 22
+    CREATE_FIGHTER = 23
+    CREATE_MONK = 24
+    CREATE_PALADIN = 25
+    CREATE_RANGER = 26
+    CREATE_ROGUE = 27
+    CREATE_SORCERER = 28
+    CREATE_WARLOCK = 29
+    CREATE_WIZARD = 30
+    ABILITIES = 31
+    POINT_BUY = 32
+    POINT_ROLL = 33
 
 class Game:
     CURRENT_STATE = ScreenState.START
     USER_TEXT = ""
     CAN_INPUT_TEXT = False
     SELECTED_TYPE = None
+    SELECTED_SET = []
+    SELECTED_INDEX = 0
+    CURRENT_TIME = 0
+    POINTS_LEFT = 27
+    ROLL_GROUPS = []
+    CURRENT_DICE = None
+    DICE_RESULTS = None
     # Events:
     BUTTONS_ENABLED = True
     ENTER_PRESSED = False
     LEFT_MOUSE_RELEASED = False
+    LEFT_ARROW_PRESSED = False
+    RIGHT_ARROW_PRESSED = False
 
 # Races:
 class Race(Enum):
@@ -67,6 +92,21 @@ class Race(Enum):
     VARIANT_HUMAN = 11
     ROCK_GNOME = 12
     TIEFLING = 13
+
+# Classes:
+class Class(Enum):
+    BARBARIAN = 1
+    BARD = 2
+    CLERIC = 3
+    DRUID = 4
+    FIGHTER = 5
+    MONK = 6
+    PALADIN = 7
+    RANGER = 8
+    ROGUE = 9
+    SORCERER = 10
+    WARLOCK = 11
+    WIZARD = 12
 
 # Dragon Types:
 class DragonType(Enum):
@@ -136,13 +176,35 @@ class Language(Enum):
     HALFLING = 8
     INFERNAL = 9
     DRUIDIC = 10
-    THEIVESCANT = 11
+    THIEVESCANT = 11
+
+LANGUAGE_NAME = {
+    Language.COMMON: "Common",
+    Language.DRACONIC: "Draconic",
+    Language.DWARVISH: "Dwarvish",
+    Language.ELVISH: "Elvish",
+    Language.GNOMISH: "Gnomish",
+    Language.UNDERCOMMON: "Undercommon",
+    Language.ORC: "Orc",
+    Language.HALFLING: "Halfling",
+    Language.INFERNAL: "Infernal",
+    Language.DRUIDIC: "Druidic",
+    Language.THIEVESCANT: "Thieves' Cant",
+}
 
 # Armour Types:
 class ArmourType(Enum):
     LIGHT = 1
     MEDIUM = 2
     HEAVY = 3
+    SHIELD = 4
+
+# Weapon Types:
+class WeaponType(Enum):
+    SIMPLE_MELEE = 1
+    SIMPLE_RANGED = 2
+    MARTIAL_MELEE = 3
+    MARTIAL_RANGED = 4
 
 # Weapon Properties:
 class Properties(Enum):
@@ -165,12 +227,63 @@ class Properties(Enum):
 
 # Abilities:
 class Ability(Enum):
-    STRENGTH = 1
-    DEXTERITY = 2
-    CONSTITUTION = 3
-    INTELLIGENCE = 4
-    WISDOM = 5
-    CHARISMA = 6
+    STRENGTH = 0
+    DEXTERITY = 1
+    CONSTITUTION = 2
+    INTELLIGENCE = 3
+    WISDOM = 4
+    CHARISMA = 5
+
+ABILITY_NAME = {
+    Ability.STRENGTH: "Strength",
+    Ability.DEXTERITY: "Dexterity",
+    Ability.CONSTITUTION: "Constitution",
+    Ability.INTELLIGENCE: "Intelligence",
+    Ability.WISDOM: "Wisdom",
+    Ability.CHARISMA: "Charisma"
+}
+
+# Skills:
+class Skill(Enum):
+    ACROBATICS = 0
+    ANIMAL_HANDLING = 1
+    ARCANA = 2
+    ATHLETICS = 3
+    DECEPTION = 4
+    HISTORY = 5
+    INSIGHT = 6
+    INTIMIDATION = 7
+    INVESTIGATION = 8
+    MEDICINE = 9
+    NATURE = 10
+    PERCEPTION = 11
+    PERFORMANCE = 12
+    PERSUASION = 13
+    RELIGION = 14
+    SLEIGHT_OF_HAND = 15
+    STEALTH = 16
+    SURVIVAL = 17
+
+SKILL_NAME = {
+    Skill.ACROBATICS: "Acrobatics",
+    Skill.ANIMAL_HANDLING: "Animal Handling",
+    Skill.ARCANA: "Arcana",
+    Skill.ATHLETICS: "Athletics",
+    Skill.DECEPTION: "Deception",
+    Skill.HISTORY: "History",
+    Skill.INSIGHT: "Insight",
+    Skill.INTIMIDATION: "Intimidation",
+    Skill.INVESTIGATION: "Investigation",
+    Skill.MEDICINE: "Medicine",
+    Skill.NATURE: "Nature",
+    Skill.PERCEPTION: "Perception",
+    Skill.PERFORMANCE: "Performance",
+    Skill.PERSUASION: "Persuasion",
+    Skill.RELIGION: "Religion",
+    Skill.SLEIGHT_OF_HAND: "Sleight of Hand",
+    Skill.STEALTH: "Stealth",
+    Skill.SURVIVAL: "Survival"
+}
 
 # Sizes:
 class Size(Enum):
@@ -180,6 +293,17 @@ class Size(Enum):
     LARGE = 4
     HUGE = 5
     GARGANTUAN = 6
+
+# Magic Schools:
+class School(Enum):
+    ABJURATION = 1
+    CONJURATION = 2
+    DIVINATION = 3
+    ENCHANTMENT = 4
+    EVOCATION = 5
+    ILLUSION = 6
+    NECROMANCY = 7
+    TRANSMUTATION = 8
 
 ALLOWED_KEYS = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9, pygame.K_a, pygame.K_b,
                 pygame.K_c, pygame.K_d, pygame.K_e, pygame.K_f, pygame.K_g, pygame.K_h, pygame.K_i, pygame.K_j, pygame.K_k, pygame.K_l, pygame.K_m, pygame.K_n,

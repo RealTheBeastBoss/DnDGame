@@ -1,18 +1,11 @@
-from game import *
-
 class Lifeform:
-    def __init__(self, ac, max_hp, speed, strength, dex, con, intel, wis, rizz, bonus, percept, lang, size,
+    def __init__(self, ac, max_hp, speed, bonus, percept, lang, size, abilities,
                  senses = [], skills = [], saves = [], resist = [], vulnerable = [], immune = []):
         self.baseArmourClass = ac
         self.maxHP = max_hp
         self.hp = max_hp
         self.speed = speed
-        self.strength = strength
-        self.dexterity = dex
-        self.constitution = con
-        self.intelligence = intel
-        self.wisdom = wis
-        self.charisma = rizz
+        self.abilities = abilities
         self.profBonus = bonus
         self.skills = skills
         self.saves = saves
