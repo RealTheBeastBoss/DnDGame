@@ -651,6 +651,7 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.CREATE_BARD
         cleric_button = Button("Cleric", 1440, 300)
         if cleric_button.check_click():
+            Game.SELECTED_SET = [Skill.HISTORY, Skill.INSIGHT, Skill.MEDICINE, Skill.PERSUASION, Skill.RELIGION]
             Game.CURRENT_STATE = ScreenState.CREATE_CLERIC
         druid_button = Button("Druid", 480, 420)
         if druid_button.check_click():
@@ -708,7 +709,8 @@ def adding_class():
                     Game.SELECTED_INDEX += 1
         else:
             PLAYER.hitDice = (1, 12)
-            PLAYER.maxHP = 12
+            PLAYER.maxHP = 12 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]]
+            PLAYER.hp = PLAYER.maxHP
             PLAYER.ragesLeft = 2
             PLAYER.rageDamage = 2
             PLAYER.proficiencies.append(ArmourType.LIGHT)
@@ -807,7 +809,8 @@ def adding_class():
                     Game.SELECTED_INDEX += 1
         else:
             PLAYER.hitDice = (1, 8)
-            PLAYER.maxHP = 8
+            PLAYER.maxHP = 8 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]]
+            PLAYER.hp = PLAYER.maxHP
             PLAYER.proficiencies.append(ArmourType.LIGHT)
             PLAYER.proficiencies.append(WeaponType.SIMPLE_MELEE)
             PLAYER.proficiencies.append(WeaponType.SIMPLE_RANGED)
@@ -824,6 +827,60 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.ABILITIES
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_CLERIC: # Creates the Cleric Player:
+        WINDOW.fill(GREEN)
+        if Game.SELECTED_SET[0] in Skill:
+            draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.skills:
+                    PLAYER.skills.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 3:
+                        Game.SELECTED_SET.clear()
+                        for spell in ALL_SPELLS:
+                            if Class.CLERIC in spell.classes and spell.level == 0:
+                                Game.SELECTED_SET.append(spell)
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        elif Game.SELECTED_SET[0] in ALL_SPELLS and Game.SELECTED_SET[0].level == 0:
+            draw_text("Select Three Cantrips:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(Game.SELECTED_SET[Game.SELECTED_INDEX].name, SMALL_FONT, RED, (960, 200), True)
+            draw_text("Spell Description:", BUTTON_FONT, RED, (960, 280))
+            for x in range(len(Game.SELECTED_SET[Game.SELECTED_INDEX].description)):
+                line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
+                draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
+                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 2:
+                        Game.SELECTED_SET.clear()
+                        for spell in ALL_SPELLS:
+                            if Class.CLERIC in spell.classes and spell.level == 1:
+                                Game.SELECTED_SET.append(spell)
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        elif Game.SELECTED_SET[0] in ALL_SPELLS and Game.SELECTED_SET[0].level == 1:
+            spell_count = max(1, 1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.WISDOM]])
+            draw_text("Select " + str(spell_count) + " Spell(s):", MEDIUM_FONT, RED, (960, 100))
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_DRUID: # Creates the Druid Player:
         return True
@@ -1116,7 +1173,37 @@ def player_scores():
         WINDOW.fill(GREEN)
         draw_text("Point Rolling", MEDIUM_FONT, RED, (960, 100))
         if len(Game.ROLL_GROUPS) == 6:
-            pass
+            draw_text(ABILITY_NAME[Ability(Game.SELECTED_INDEX)] + ": " + str(PLAYER.abilities[Ability(Game.SELECTED_INDEX)]), SMALL_FONT, RED, (960, 200), True)
+            if PLAYER.abilities[Ability(Game.SELECTED_INDEX)] == 0:
+                for x in range(len(Game.ROLL_GROUPS)):
+                    if x not in Game.DICE_RESULTS:
+                        button = Button(str(Game.ROLL_GROUPS[x]), 960, 300 + (x * 65))
+                        if button.check_click():
+                            Game.DICE_RESULTS.append(x)
+                            PLAYER.abilities[Ability(Game.SELECTED_INDEX)] = Game.ROLL_GROUPS[x]
+                            break
+            reset_button = Button("Reset", 960, 690)
+            if reset_button.check_click():
+                for ability in list(Ability):
+                    PLAYER.abilities[ability] = 0
+                    Game.DICE_RESULTS = []
+            if len(Game.DICE_RESULTS) == 6:
+                continue_button = Button("Continue", 960, 755)
+                if continue_button.check_click():
+                    Game.DICE_RESULTS = []
+                    Game.ROLL_GROUPS = []
+                    Game.SELECTED_INDEX = 0
+                    Game.CURRENT_STATE = ScreenState.SELECT_RACE
+            if Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Ability) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Ability) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
         else:
             if len(Game.ROLL_GROUPS) > 0:
                 draw_text("Scores:", SMALL_FONT, RED, (1800, 360))

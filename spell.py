@@ -16,6 +16,8 @@ def animal_friendship(player):
     print("Used Animal Friendship!")
 def bane(player):
     print("Used Bane!")
+def bless(player):
+    print("Used Bless!")
 def chill_touch(player):
     print("Used Chill Touch!")
 def cure_wounds(player):
@@ -24,18 +26,30 @@ def dancing_lights(player):
     print("Used Dancing Lights!")
 def fire_bolt(player):
     print("Used Fire Bolt!")
+def guidance(player):
+    print("Used Guidance!")
+def guiding_bolt(player):
+    print("Used Guiding Bolt!")
 def healing_word(player):
     print("Used Healing Word!")
+def inflict_wounds(player):
+    print("Used Inflict Wounds!")
 def longstrider(player):
     print("Used Longstrider!")
 def poison_spray(player):
     print("Used Poison Spray!")
 def ray_of_frost(player):
     print("Used Ray of Frost!")
+def resistance(player):
+    print("Used Resistance!")
+def sacred_flame(player):
+    print("Used Sacred Flame!")
 def shocking_grasp(player):
     print("Used Shocking Grasp!")
 def sleep(player):
     print("Used Sleep!")
+def spare_the_dying(player):
+    print("Used Spare the Dying!")
 def thaumaturgy(player):
     print("Used Thaumaturgy!")
 def thunderwave(player):
@@ -64,6 +78,11 @@ BANE = Spell(1, "Bane", ["Up to three creatures of your choice that you can see 
             "At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st."],
              School.ENCHANTMENT, bane, [Class.BARD, Class.CLERIC])
 
+BLESS = Spell(1, "Bless", ["You bless up to three creatures of your choice within range.",
+            "Whenever a target makes an attack roll or a saving throw before the spell ends, the target can roll a d4 and add the number rolled to the attack roll or saving throw.",
+            "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st."],
+              School.ENCHANTMENT, bless, [Class.CLERIC, Class.PALADIN])
+
 CHILL_TOUCH = Spell(0, "Chill Touch", ["You create a ghostly, skeletal hand in the space of a creature within range.",
                     "Make a ranged spell attack against the creature to assail it with the chill of the grave.",
                     "On a hit, the target takes 1d8 necrotic damage, and it can't regain hit points until the start of your next turn.",
@@ -87,10 +106,22 @@ FIRE_BOLT = Spell(0, "Fire Bolt", ["You hurl a mote of fire at a creature or obj
                    "This spell's damage increases by 1d10 when you reach 5th level (2d10), 11th level (3d10), and 17th level (4d10)."],
                   School.EVOCATION, fire_bolt, [Class.SORCERER, Class.WIZARD])
 
+GUIDANCE = Spell(0, "Guidance", ["You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one ability check of its choice.",
+                "It can roll the die before or after making the ability check. The spell then ends."], School.DIVINATION, guidance, [Class.CLERIC, Class.DRUID])
+
+GUIDING_BOLT = Spell(1, "Guiding Bolt", ["A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack against the target.",
+                    "On a hit, the target takes 4d6 radiant damage, and the next attack roll made against this target before the end of your next turn has advantage, thanks to the mystical dim light glittering on the target until then.",
+                    "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st."],
+                     School.EVOCATION, guiding_bolt, [Class.CLERIC])
+
 HEALING_WORD = Spell(1, "Healing Word", ["A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier.",
                     "This spell has no effect on undead or constructs.",
                     "At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d4 for each slot level above 1st."],
                      School.EVOCATION, healing_word, [Class.BARD, Class.CLERIC, Class.DRUID])
+
+INFLICT_WOUNDS = Spell(1, "Inflict Wounds", ["Make a melee spell attack against a creature you can reach. On a hit, the target takes 3d10 necrotic damage.",
+                    "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st."],
+                       School.NECROMANCY, inflict_wounds, [Class.CLERIC])
 
 LONGSTRIDER = Spell(1, "Longstrider", ["You touch a creature. The target’s speed increases by 10 feet until the spell ends.",
                     "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st."],
@@ -106,6 +137,14 @@ RAY_OF_FROST = Spell(0, "Ray of Frost", ["A frigid beam of blue-white light stre
                     "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."],
                      School.EVOCATION, ray_of_frost, [Class.SORCERER, Class.WIZARD])
 
+RESISTANCE = Spell(0, "Resistance", ["You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one saving throw of its choice.",
+                    "It can roll the die before or after making the saving throw. The spell then ends."], School.ABJURATION, resistance, [Class.CLERIC, Class.DRUID])
+
+SACRED_FLAME = Spell(0, "Sacred Flame", ["Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 radiant damage.",
+                    "The target gains no benefit from cover for this saving throw.",
+                    "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."], School.EVOCATION, sacred_flame,
+                     [Class.CLERIC])
+
 SHOCKING_GRASP = Spell(0, "Shocking Grasp", ["Lightning springs from your hand to deliver a shock to a creature you try to touch.",
                     "Make a melee spell attack against the target. You have advantage on the attack roll if the target is wearing armor made of metal.",
                     "On a hit, the target takes 1d8 lightning damage, and it can't take reactions until the start of its next turn.",
@@ -120,6 +159,9 @@ SLEEP = Spell(1, "Sleep", ["This spell sends creatures into a magical slumber. R
                 "A creature’s hit points must be equal to or less than the remaining total for that creature to be affected.Undead and creatures immune to being charmed aren’t affected by this spell.",
                 "At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, roll an additional 2d8 for each slot level above 1st."],
               School.ENCHANTMENT, sleep, [Class.BARD, Class.SORCERER, Class.WIZARD])
+
+SPARE_THE_DYING = Spell(0, "Spare the Dying", ["You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs."],
+                        School.NECROMANCY, spare_the_dying, [Class.CLERIC])
 
 THAUMATURGY = Spell(0, "Thaumaturgy", ["You manifest a minor wonder, a sign of supernatural power, within range. You create one of the following magical effects within range:",
                     "- Your voice booms up to three times as loud as normal for 1 minute.",
@@ -148,5 +190,5 @@ VICIOUS_MOCKERY = Spell(0, "Vicious Mockery", ["You unleash a string of insults 
                         "This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4)."], School.ENCHANTMENT,
                         vicious_mockery, [Class.BARD])
 
-ALL_SPELLS = [ACID_SPLASH, ANIMAL_FRIENDSHIP, BANE, CHILL_TOUCH, CURE_WOUNDS, DANCING_LIGHTS, FIRE_BOLT, HEALING_WORD, LONGSTRIDER,
-              POISON_SPRAY, RAY_OF_FROST, SHOCKING_GRASP, SLEEP, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
+ALL_SPELLS = [ACID_SPLASH, ANIMAL_FRIENDSHIP, BANE, BLESS, CHILL_TOUCH, CURE_WOUNDS, DANCING_LIGHTS, FIRE_BOLT, GUIDANCE, GUIDING_BOLT, HEALING_WORD, INFLICT_WOUNDS,
+              LONGSTRIDER, POISON_SPRAY, RAY_OF_FROST, RESISTANCE, SACRED_FLAME, SHOCKING_GRASP, SLEEP, SPARE_THE_DYING, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
