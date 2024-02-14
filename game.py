@@ -74,6 +74,8 @@ class ScreenState(Enum):
     ABILITIES = 31
     POINT_BUY = 32
     POINT_ROLL = 33
+    STARTING_GOLD = 34
+    CHARACTER_SHEET = 35
 
 class Game:
     CURRENT_STATE = ScreenState.START

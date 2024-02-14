@@ -724,7 +724,7 @@ def adding_class():
             PLAYER.saves.append(Ability.CONSTITUTION)
             Game.SELECTED_SET.clear()
             Game.SELECTED_INDEX = 0
-            Game.CURRENT_STATE = ScreenState.ABILITIES
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_BARD: # Creates the Bard Player:
         # TODO: Bardic Inspiration
@@ -824,7 +824,7 @@ def adding_class():
             PLAYER.inspireDice = (1, 6)
             PLAYER.spellAbility = Ability.CHARISMA
             Game.SELECTED_SET.clear()
-            Game.CURRENT_STATE = ScreenState.ABILITIES
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_CLERIC: # Creates the Cleric Player:
         WINDOW.fill(GREEN)
@@ -881,6 +881,43 @@ def adding_class():
         elif Game.SELECTED_SET[0] in ALL_SPELLS and Game.SELECTED_SET[0].level == 1:
             spell_count = max(1, 1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.WISDOM]])
             draw_text("Select " + str(spell_count) + " Spell(s):", MEDIUM_FONT, RED, (960, 100))
+            draw_text(Game.SELECTED_SET[Game.SELECTED_INDEX].name, SMALL_FONT, RED, (960, 200), True)
+            draw_text("Spell Description:", BUTTON_FONT, RED, (960, 280))
+            for x in range(len(Game.SELECTED_SET[Game.SELECTED_INDEX].description)):
+                line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
+                draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
+                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 8 - spell_count:
+                        Game.SELECTED_SET = [None]
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        else:
+            PLAYER.hitDice = (1, 8)
+            PLAYER.maxHP = 8 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]]
+            PLAYER.hp = PLAYER.maxHP
+            PLAYER.proficiencies.append(ArmourType.LIGHT)
+            PLAYER.proficiencies.append(ArmourType.MEDIUM)
+            PLAYER.proficiencies.append(ArmourType.SHIELD)
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_MELEE)
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_RANGED)
+            PLAYER.saves.append(Ability.WISDOM)
+            PLAYER.saves.append(Ability.CHARISMA)
+            PLAYER.lvl1SlotsLeft = 2
+            PLAYER.spellAbility = Ability.WISDOM
+            Game.SELECTED_SET.clear()
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_DRUID: # Creates the Druid Player:
         return True

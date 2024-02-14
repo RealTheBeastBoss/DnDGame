@@ -44,6 +44,10 @@ def resistance(player):
     print("Used Resistance!")
 def sacred_flame(player):
     print("Used Sacred Flame!")
+def sanctuary(player):
+    print("Used Sanctuary!")
+def shield_of_faith(player):
+    print("Used Shield of Faith!")
 def shocking_grasp(player):
     print("Used Shocking Grasp!")
 def sleep(player):
@@ -145,6 +149,14 @@ SACRED_FLAME = Spell(0, "Sacred Flame", ["Flame-like radiance descends on a crea
                     "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."], School.EVOCATION, sacred_flame,
                      [Class.CLERIC])
 
+SANCTUARY = Spell(1, "Sanctuary", ["You ward a creature within range against attack. Until the spell ends, any creature who targets the warded creature with an attack or a harmful spell must first make a Wisdom saving throw.",
+                "On a failed save, the creature must choose a new target or lose the attack or spell. This spell doesn't protect the warded creature from area effects, such as the explosion of a fireball.",
+                "If the warded creature makes an attack, casts a spell that affects an enemy, or deals damage to another creature, this spell ends."],
+                  School.ABJURATION, sanctuary, [Class.CLERIC])
+
+SHIELD_OF_FAITH = Spell(1, "Shield of Faith", ["A shimmering field appears and surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration."],
+                        School.ABJURATION, shield_of_faith, [Class.CLERIC, Class.PALADIN])
+
 SHOCKING_GRASP = Spell(0, "Shocking Grasp", ["Lightning springs from your hand to deliver a shock to a creature you try to touch.",
                     "Make a melee spell attack against the target. You have advantage on the attack roll if the target is wearing armor made of metal.",
                     "On a hit, the target takes 1d8 lightning damage, and it can't take reactions until the start of its next turn.",
@@ -191,4 +203,4 @@ VICIOUS_MOCKERY = Spell(0, "Vicious Mockery", ["You unleash a string of insults 
                         vicious_mockery, [Class.BARD])
 
 ALL_SPELLS = [ACID_SPLASH, ANIMAL_FRIENDSHIP, BANE, BLESS, CHILL_TOUCH, CURE_WOUNDS, DANCING_LIGHTS, FIRE_BOLT, GUIDANCE, GUIDING_BOLT, HEALING_WORD, INFLICT_WOUNDS,
-              LONGSTRIDER, POISON_SPRAY, RAY_OF_FROST, RESISTANCE, SACRED_FLAME, SHOCKING_GRASP, SLEEP, SPARE_THE_DYING, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
+              LONGSTRIDER, POISON_SPRAY, RAY_OF_FROST, RESISTANCE, SACRED_FLAME, SANCTUARY, SHIELD_OF_FAITH, SHOCKING_GRASP, SLEEP, SPARE_THE_DYING, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
