@@ -655,6 +655,7 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.CREATE_CLERIC
         druid_button = Button("Druid", 480, 420)
         if druid_button.check_click():
+            Game.SELECTED_SET = [Skill.ARCANA, Skill.ANIMAL_HANDLING, Skill.INSIGHT, Skill.MEDICINE, Skill.NATURE, Skill.PERCEPTION, Skill.RELIGION, Skill.SURVIVAL]
             Game.CURRENT_STATE = ScreenState.CREATE_DRUID
         fighter_button = Button("Fighter", 960, 420)
         if fighter_button.check_click():
@@ -920,6 +921,56 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_DRUID: # Creates the Druid Player:
+        if Game.SELECTED_SET[0] in Skill:
+            draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.skills:
+                    PLAYER.skills.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 6:
+                        Game.SELECTED_SET.clear()
+                        for spell in ALL_SPELLS:
+                            if Class.DRUID in spell.classes and spell.level == 0:
+                                Game.SELECTED_SET.append(spell)
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        elif Game.SELECTED_SET[0] in ALL_SPELLS and Game.SELECTED_SET[0].level == 0:
+            draw_text("Select Two Cantrips:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(Game.SELECTED_SET[Game.SELECTED_INDEX].name, SMALL_FONT, RED, (960, 200), True)
+            draw_text("Spell Description:", BUTTON_FONT, RED, (960, 280))
+            for x in range(len(Game.SELECTED_SET[Game.SELECTED_INDEX].description)):
+                line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
+                draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
+                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 2:
+                        Game.SELECTED_SET.clear()
+                        for spell in ALL_SPELLS:
+                            if Class.DRUID in spell.classes and spell.level == 1:
+                                Game.SELECTED_SET.append(spell)
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_FIGHTER: # Creates the Fighter Player:
         return True
