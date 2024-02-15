@@ -338,7 +338,7 @@ def adding_race():
                 PLAYER.proficiencies.append(Shortsword)
                 PLAYER.proficiencies.append(Shortbow)
                 PLAYER.proficiencies.append(Longbow)
-                PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
                 PLAYER.spellAbility = Ability.INTELLIGENCE
                 Game.SELECTED_SET.clear()
                 Game.SELECTED_INDEX = 0
@@ -631,7 +631,7 @@ def adding_race():
         PLAYER.speed = 30
         PLAYER.senses.append(Sense.DARKVISION60)
         PLAYER.resistance.append(Damage.FIRE)
-        PLAYER.cantrips.append(THAUMATURGY)
+        PLAYER.knownSpells.append(THAUMATURGY)
         PLAYER.spellAbility = Ability.CHARISMA
         Game.CURRENT_STATE = ScreenState.SELECT_CLASS
         return True
@@ -765,8 +765,8 @@ def adding_class():
                 line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
                 draw_text(line, TINY_FONT, RED, (960, 400 + (x * 40)))
             if Game.ENTER_PRESSED:
-                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
-                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.knownSpells:
+                    PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_INDEX = 0
                 if len(Game.SELECTED_SET) == 1:
@@ -860,8 +860,8 @@ def adding_class():
                 line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
                 draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
             if Game.ENTER_PRESSED:
-                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
-                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.knownSpells:
+                    PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_INDEX = 0
                     if len(Game.SELECTED_SET) == 2:
@@ -888,8 +888,8 @@ def adding_class():
                 line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
                 draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
             if Game.ENTER_PRESSED:
-                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
-                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.knownSpells:
+                    PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_INDEX = 0
                     if len(Game.SELECTED_SET) == 8 - spell_count:
@@ -921,6 +921,7 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_DRUID: # Creates the Druid Player:
+        WINDOW.fill(GREEN)
         if Game.SELECTED_SET[0] in Skill:
             draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
             draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
@@ -952,8 +953,8 @@ def adding_class():
                 line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
                 draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
             if Game.ENTER_PRESSED:
-                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.cantrips:
-                    PLAYER.cantrips.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.knownSpells:
+                    PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
                     Game.SELECTED_INDEX = 0
                     if len(Game.SELECTED_SET) == 2:
@@ -971,6 +972,33 @@ def adding_class():
                     Game.SELECTED_INDEX = 0
                 else:
                     Game.SELECTED_INDEX += 1
+        elif Game.SELECTED_SET[0] in ALL_SPELLS and Game.SELECTED_SET[0].level == 1:
+            spell_count = max(1, 1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.WISDOM]])
+            draw_text("Select " + str(spell_count) + " Spell(s):", MEDIUM_FONT, RED, (960, 100))
+            draw_text(Game.SELECTED_SET[Game.SELECTED_INDEX].name, SMALL_FONT, RED, (960, 200), True)
+            draw_text("Spell Description:", BUTTON_FONT, RED, (960, 280))
+            for x in range(len(Game.SELECTED_SET[Game.SELECTED_INDEX].description)):
+                line = Game.SELECTED_SET[Game.SELECTED_INDEX].description[x]
+                draw_text(line, TINY_FONT, RED, (960, 320 + (x * 40)))
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.knownSpells:
+                    PLAYER.knownSpells.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 8 - spell_count:
+                        Game.SELECTED_SET = [None]
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        else:
+            pass
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_FIGHTER: # Creates the Fighter Player:
         return True

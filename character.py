@@ -24,7 +24,6 @@ class Character(Lifeform):
         # Magic
         self.concentrating = False
         self.spellAbility = None
-        self.cantrips = []
         self.knownSpells = []
         self.lvl1SlotsLeft = 0
         # Dragonborn

@@ -18,14 +18,20 @@ def bane(player):
     print("Used Bane!")
 def bless(player):
     print("Used Bless!")
+def charm_person(player):
+    print("Used Charm Person!")
 def chill_touch(player):
     print("Used Chill Touch!")
 def cure_wounds(player):
     print("Used Cure Wounds!")
 def dancing_lights(player):
     print("Used Dancing Lights!")
+def entangle(player):
+    print("Used Entangle!")
 def fire_bolt(player):
     print("Used Fire Bolt!")
+def goodberry(player):
+    print("Used Goodberry!")
 def guidance(player):
     print("Used Guidance!")
 def guiding_bolt(player):
@@ -38,6 +44,8 @@ def longstrider(player):
     print("Used Longstrider!")
 def poison_spray(player):
     print("Used Poison Spray!")
+def produce_flame(player):
+    print("Used Produce Flame!")
 def ray_of_frost(player):
     print("Used Ray of Frost!")
 def resistance(player):
@@ -87,6 +95,12 @@ BLESS = Spell(1, "Bless", ["You bless up to three creatures of your choice withi
             "At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st."],
               School.ENCHANTMENT, bless, [Class.CLERIC, Class.PALADIN])
 
+CHARM_PERSON = Spell(1, "Charm Person", ["You attempt to charm a humanoid you can see within range. It must make a Wisdom saving throw, and does so with advantage if you or your companions are fighting it.",
+                    "If it fails the saving throw, it is charmed by you until the spell ends or until you or your companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance.",
+                    "When the spell ends, the creature knows it was charmed by you.",
+                    "At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st. The creatures must be within 30 feet of each other when you target them."],
+                     School.ENCHANTMENT, charm_person, [Class.BARD, Class.DRUID, Class.SORCERER, Class.WARLOCK, Class.WIZARD])
+
 CHILL_TOUCH = Spell(0, "Chill Touch", ["You create a ghostly, skeletal hand in the space of a creature within range.",
                     "Make a ranged spell attack against the creature to assail it with the chill of the grave.",
                     "On a hit, the target takes 1d8 necrotic damage, and it can't regain hit points until the start of your next turn.",
@@ -105,10 +119,19 @@ DANCING_LIGHTS = Spell(0, "Dancing Lights", ["You create up to four torch-sized 
                         "A light must be within 20 feet of another light created by this spell, and a light winks out if it exceeds the spell's range"],
                         School.EVOCATION, dancing_lights, [Class.BARD, Class.WIZARD, Class.SORCERER])
 
+ENTANGLE = Spell(1, "Entangle", ["Grasping weeds and vines sprout from the ground in a 20-foot square starting from a point within range. For the duration, these plants turn the ground in the area into difficult terrain.",
+                "A creature in the area when you cast the spell must succeed on a Strength saving throw or be restrained by the entangling plants until the spell ends.",
+                "A creature restrained by the plants can use its action to make a Strength check against your spell save DC. On a success, it frees itself.",
+                "When the spell ends, the conjured plants wilt away."], School.CONJURATION, entangle, [Class.DRUID])
+
 FIRE_BOLT = Spell(0, "Fire Bolt", ["You hurl a mote of fire at a creature or object within range. Make a ranged spell attack against the target.",
                    "On a hit, the target takes 1d10 fire damage. A flammable object hit by this spell ignites if it isn't being worn or carried.",
                    "This spell's damage increases by 1d10 when you reach 5th level (2d10), 11th level (3d10), and 17th level (4d10)."],
                   School.EVOCATION, fire_bolt, [Class.SORCERER, Class.WIZARD])
+
+GOODBERRY = Spell(1, "Goodberry", ["Up to ten berries appear in your hand and are infused with magic for the duration. A creature can use its action to eat one berry.",
+                "Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day. The berries lose their potency if they have not been consumed within 24 hours of the casting of this spell."],
+                  School.TRANSMUTATION, goodberry, [Class.DRUID, Class.RANGER])
 
 GUIDANCE = Spell(0, "Guidance", ["You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one ability check of its choice.",
                 "It can roll the die before or after making the ability check. The spell then ends."], School.DIVINATION, guidance, [Class.CLERIC, Class.DRUID])
@@ -135,6 +158,13 @@ POISON_SPRAY = Spell(0, "Poison Spray", ["You extend your hand toward a creature
                       "The creature must succeed on a Constitution saving throw or take 1d12 poison damage.",
                       "This spell's damage increases by 1d12 when you reach 5th level (2d12), 11th level (3d12), and 17th level (4d12)."],
                      School.CONJURATION, poison_spray, [Class.SORCERER, Class.DRUID, Class.WIZARD, Class.WARLOCK])
+
+PRODUCE_FLAME = Spell(0, "Produce Flame", ["A flickering flame appears in your hand. The flame remains there for the duration and harms neither you nor your equipment.",
+                    "The flame sheds bright light in a 10-foot radius and dim light for an additional 10 feet. The spell ends if you dismiss it as an action or if you cast it again.",
+                    "You can also attack with the flame, although doing so ends the spell. When you cast this spell, or as an action on a later turn, you can hurl the flame at a creature within 30 feet of you.",
+                    "Make a ranged spell attack. On a hit, the target takes 1d8 fire damage.",
+                    "This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."], School.CONJURATION, produce_flame,
+                      [Class.DRUID])
 
 RAY_OF_FROST = Spell(0, "Ray of Frost", ["A frigid beam of blue-white light streaks toward a creature within range.",
                     "Make a ranged spell attack against the target. On a hit, it takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn.",
@@ -202,5 +232,7 @@ VICIOUS_MOCKERY = Spell(0, "Vicious Mockery", ["You unleash a string of insults 
                         "This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4)."], School.ENCHANTMENT,
                         vicious_mockery, [Class.BARD])
 
-ALL_SPELLS = [ACID_SPLASH, ANIMAL_FRIENDSHIP, BANE, BLESS, CHILL_TOUCH, CURE_WOUNDS, DANCING_LIGHTS, FIRE_BOLT, GUIDANCE, GUIDING_BOLT, HEALING_WORD, INFLICT_WOUNDS,
-              LONGSTRIDER, POISON_SPRAY, RAY_OF_FROST, RESISTANCE, SACRED_FLAME, SANCTUARY, SHIELD_OF_FAITH, SHOCKING_GRASP, SLEEP, SPARE_THE_DYING, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
+ALL_SPELLS = [ACID_SPLASH, ANIMAL_FRIENDSHIP, BANE, BLESS, CHARM_PERSON, CHILL_TOUCH, CURE_WOUNDS, DANCING_LIGHTS, ENTANGLE, FIRE_BOLT,
+              GOODBERRY, GUIDANCE, GUIDING_BOLT, HEALING_WORD, INFLICT_WOUNDS,
+              LONGSTRIDER, POISON_SPRAY, PRODUCE_FLAME, RAY_OF_FROST, RESISTANCE, SACRED_FLAME, SANCTUARY, SHIELD_OF_FAITH,
+              SHOCKING_GRASP, SLEEP, SPARE_THE_DYING, THAUMATURGY, THUNDERWAVE, TRUE_STRIKE, VICIOUS_MOCKERY]
