@@ -35,3 +35,6 @@ class Character(Lifeform):
         # Bard
         self.inspiresLeft = 0
         self.inspireDice = None
+        # Fighter:
+        self.fightingStyle = None
+        self.hasWinded = False

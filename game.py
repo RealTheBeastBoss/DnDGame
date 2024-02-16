@@ -140,6 +140,23 @@ class DragonType(Enum):
     SILVER = 9
     WHITE = 10
 
+class FightingStyle(Enum):
+    ARCHERY = 0
+    DEFENCE = 1
+    DUELING = 2
+    GREAT_WEAPON = 3
+    PROTECTION = 4
+    TWO_WEAPON = 5
+
+FIGHTING_NAME = {
+    FightingStyle.ARCHERY: "Archery",
+    FightingStyle.DEFENCE: "Defence",
+    FightingStyle.DUELING: "Dueling",
+    FightingStyle.GREAT_WEAPON: "Great Weapon",
+    FightingStyle.PROTECTION: "Protection",
+    FightingStyle.TWO_WEAPON: "Two Weapon"
+}
+
 # Damage Types:
 class Damage(Enum):
     ACID = 1

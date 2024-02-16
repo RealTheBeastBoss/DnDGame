@@ -44,4 +44,4 @@ class Splint(Armour):
         super().__init__("Splint Armour", 20000, 17, ArmourType.HEAVY, True, True, 15)
 class Plate(Armour):
     def __init__(self):
-        super().__init__("Plate Armour", 150000, 18, ArmourType.HEAVY, True, 15)
+        super().__init__("Plate Armour", 150000, 18, ArmourType.HEAVY, True, True, 15)

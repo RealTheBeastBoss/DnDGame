@@ -659,12 +659,15 @@ def adding_class():
             Game.CURRENT_STATE = ScreenState.CREATE_DRUID
         fighter_button = Button("Fighter", 960, 420)
         if fighter_button.check_click():
+            Game.SELECTED_SET = [Skill.ACROBATICS, Skill.ANIMAL_HANDLING, Skill.ATHLETICS, Skill.HISTORY, Skill.INSIGHT, Skill.INTIMIDATION, Skill.PERCEPTION, Skill.SURVIVAL]
             Game.CURRENT_STATE = ScreenState.CREATE_FIGHTER
         monk_button = Button("Monk", 1440, 420)
         if monk_button.check_click():
+            Game.SELECTED_SET = [Skill.ACROBATICS, Skill.ATHLETICS, Skill.HISTORY, Skill.INSIGHT, Skill.RELIGION, Skill.STEALTH]
             Game.CURRENT_STATE = ScreenState.CREATE_MONK
         paladin_button = Button("Paladin", 480, 540)
         if paladin_button.check_click():
+            Game.SELECTED_SET = [Skill.ATHLETICS, Skill.INSIGHT, Skill.INTIMIDATION, Skill.MEDICINE, Skill.PERSUASION, Skill.RELIGION]
             Game.CURRENT_STATE = ScreenState.CREATE_PALADIN
         ranger_button = Button("Ranger", 960, 540)
         if ranger_button.check_click():
@@ -998,13 +1001,146 @@ def adding_class():
                 else:
                     Game.SELECTED_INDEX += 1
         else:
-            pass
+            PLAYER.hitDice = (1, 8)
+            PLAYER.maxHP = 8 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]]
+            PLAYER.hp = PLAYER.maxHP
+            PLAYER.proficiencies.append(ArmourType.LIGHT)
+            PLAYER.proficiencies.append(ArmourType.MEDIUM)
+            PLAYER.proficiencies.append(ArmourType.SHIELD)
+            PLAYER.proficiencies.append(Club)
+            PLAYER.proficiencies.append(Dagger)
+            PLAYER.proficiencies.append(Dart)
+            PLAYER.proficiencies.append(Javelin)
+            PLAYER.proficiencies.append(Mace)
+            PLAYER.proficiencies.append(Quarterstaff)
+            PLAYER.proficiencies.append(Schimitar)
+            PLAYER.proficiencies.append(Sickle)
+            PLAYER.proficiencies.append(Sling)
+            PLAYER.proficiencies.append(Spear)
+            PLAYER.saves.append(Ability.INTELLIGENCE)
+            PLAYER.saves.append(Ability.WISDOM)
+            PLAYER.spellAbility = Ability.WISDOM
+            PLAYER.lvl1SlotsLeft = 2
+            Game.SELECTED_SET.clear()
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_FIGHTER: # Creates the Fighter Player:
+        WINDOW.fill(GREEN)
+        if Game.SELECTED_SET[0] in Skill:
+            draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.skills:
+                    PLAYER.skills.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 6:
+                        Game.SELECTED_SET = [None]
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        elif PLAYER.fightingStyle is None:
+            draw_text("Select your Fighting Style:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(FIGHTING_NAME[FightingStyle(Game.SELECTED_INDEX)], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                PLAYER.fightingStyle = FightingStyle(Game.SELECTED_INDEX)
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(FightingStyle) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(FightingStyle) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        else:
+            PLAYER.hitDice = (1, 10)
+            PLAYER.maxHP = max(1, 1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]])
+            PLAYER.hp = PLAYER.maxHP
+            PLAYER.proficiencies.append(ArmourType.LIGHT)
+            PLAYER.proficiencies.append(ArmourType.MEDIUM)
+            PLAYER.proficiencies.append(ArmourType.HEAVY)
+            PLAYER.proficiencies.append(ArmourType.SHIELD)
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_MELEE)
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_RANGED)
+            PLAYER.proficiencies.append(WeaponType.MARTIAL_MELEE)
+            PLAYER.proficiencies.append(WeaponType.MARTIAL_RANGED)
+            PLAYER.saves.append(Ability.STRENGTH)
+            PLAYER.saves.append(Ability.CONSTITUTION)
+            Game.SELECTED_SET.clear()
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_MONK: # Creates the Monk Player:
+        WINDOW.fill(GREEN)
+        if Game.SELECTED_SET[0] in Skill:
+            draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.skills:
+                    PLAYER.skills.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 4:
+                        Game.SELECTED_SET = [None]
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        else:
+            PLAYER.hitDice = (1, 8)
+            PLAYER.maxHP = max(1, 1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]])
+            PLAYER.hp = PLAYER.maxHP
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_MELEE)
+            PLAYER.proficiencies.append(WeaponType.SIMPLE_RANGED)
+            PLAYER.proficiencies.append(Shortsword)
+            PLAYER.saves.append(Ability.STRENGTH)
+            PLAYER.saves.append(Ability.DEXTERITY)
+            Game.SELECTED_SET.clear()
+            Game.CURRENT_STATE = ScreenState.CHARACTER_SHEET
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_PALADIN: # Creates the Paladin Player:
+        WINDOW.fill(GREEN)
+        if Game.SELECTED_SET[0] in Skill:
+            draw_text("Select Two Skills:", MEDIUM_FONT, RED, (960, 100))
+            draw_text(SKILL_NAME[Game.SELECTED_SET[Game.SELECTED_INDEX]], SMALL_FONT, RED, (960, 200), True)
+            if Game.ENTER_PRESSED:
+                if Game.SELECTED_SET[Game.SELECTED_INDEX] not in PLAYER.skills:
+                    PLAYER.skills.append(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_SET.remove(Game.SELECTED_SET[Game.SELECTED_INDEX])
+                    Game.SELECTED_INDEX = 0
+                    if len(Game.SELECTED_SET) == 4:
+                        Game.SELECTED_SET = [None]
+            elif Game.LEFT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == 0:
+                    Game.SELECTED_INDEX = len(Game.SELECTED_SET) - 1
+                else:
+                    Game.SELECTED_INDEX -= 1
+            elif Game.RIGHT_ARROW_PRESSED:
+                if Game.SELECTED_INDEX == len(Game.SELECTED_SET) - 1:
+                    Game.SELECTED_INDEX = 0
+                else:
+                    Game.SELECTED_INDEX += 1
+        else:
+            PLAYER.hitDice = (1, 10)
+            PLAYER.maxHP = max(1 + ABILITY_MODIFIER[PLAYER.abilities[Ability.CONSTITUTION]])
+            PLAYER.proficiencies.append(ArmourType.LIGHT)
+            PLAYER.proficiencies.append(ArmourType.MEDIUM)
+            PLAYER.proficiencies.append(ArmourType.HEAVY)
+            PLAYER.proficiencies.append(ArmourType.SHIELD)
         return True
     elif Game.CURRENT_STATE == ScreenState.CREATE_RANGER: # Creates the Ranger Player:
         return True
